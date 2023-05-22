@@ -71,7 +71,7 @@ class UrlOperations(APIView):
         if not url:
             return Response({"message": "Short url doesn't exists!"}, status=status.HTTP_400_BAD_REQUEST)
         if url.first().long_url == long_url:
-            return Response({"message": "Long url already updated!"}, status=status.HTTP_200_OK)
+            return Response({"message": "Long url already updated!"}, status=status.HTTP_204_NO_CONTENT)
 
         # Perform update operation
         url.update(long_url=long_url)
@@ -86,7 +86,19 @@ class UrlOperations(APIView):
                 "message": "Short url updated!",
                 "longUrl": updated_long_url
             }
-        return Response(response_data, status=status.HTTP_200_OK)
+        return Response(response_data, status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request):
-        pass
+        short_url = request.data.get('shortUrl')
+        if short_url is None:
+            return Response({"message": "Missing shortUrl in requests parameter"}, status=status.HTTP_400_BAD_REQUEST)
+
+        url = UrlInfo.objects.filter(short_url=short_url)
+        if url is None:
+            return Response({"message": "Short url doesn't exist. Provide another url"}, status=status.HTTP_204_NO_CONTENT)
+
+        url.delete()
+        if UrlInfo.objects.filter(short_url=short_url).exists():
+            return Response({"message": "Short Url not deleted. Please try again"}, status=status.HTTP_200_OK)
+
+        return Response({"message": "ShortUrl deleted!"}, status=status.HTTP_204_NO_CONTENT)
