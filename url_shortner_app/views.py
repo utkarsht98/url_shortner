@@ -13,7 +13,13 @@ class UrlOperations(APIView):
 
     def post(self, request):
         """
-        :param request: Contains a long url of string type
+        Convert the long url to a short url
+
+        Args:
+            request (Request): The HTTP request JSON object consists of given long url.
+
+        Returns:
+            Response: A response with the successful created status code (201).
         """
         long_url = request.data.get("longUrl")
         if long_url is None:
@@ -46,6 +52,15 @@ class UrlOperations(APIView):
         return Response(response_data, status=status.HTTP_201_CREATED)
 
     def get(self, request):
+        """
+        Retrieve the long url given the short url as a request.
+
+        Args:
+            request (Request): The HTTP request JSON object consists of short url.
+
+        Returns:
+            Response: A response with the resultant long url and successful created status code (200).
+        """
         short_url = request.data.get("shortUrl")
 
         if short_url is None:
@@ -61,6 +76,15 @@ class UrlOperations(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
     def patch(self, request):
+        """
+        Update the given short url to a different long url for redirection.
+
+        Args:
+            request (Request): The HTTP request JSON object consists of short url and new long url to be redirected to.
+
+        Returns:
+            Response: A response with the new long url and successful updated status code (204).
+        """
         short_url = request.data.get('shortUrl')
         long_url = request.data.get('longUrl')
 
@@ -89,6 +113,15 @@ class UrlOperations(APIView):
         return Response(response_data, status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request):
+        """
+        Delete the given short url.
+
+        Args:
+            request (Request): The HTTP request JSON object consists of short url.
+
+        Returns:
+            Response: A response with the successful updated status code (204).
+        """
         short_url = request.data.get('shortUrl')
         if short_url is None:
             return Response({"message": "Missing shortUrl in requests parameter"}, status=status.HTTP_400_BAD_REQUEST)
