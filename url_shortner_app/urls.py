@@ -21,5 +21,7 @@ from .views import UrlOperations
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/create_short_url/', UrlOperations.as_view(), name='create_short_url')
+    path('api/v1/create_short_url/', UrlOperations.as_view(), name='create_short_url'),
+    path('api/v1/get_long_url/', UrlOperations.as_view(), name='get_long_url'),
+    path('api/v1/update_short_url/', UrlOperations.as_view(), name='update_short_url')
 ]
